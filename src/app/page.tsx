@@ -38,7 +38,7 @@ export default function Home() {
         <section className='mt-5' >
           <div className="container">
          <h1 className="text-3xl font-bold">How it all started</h1>
-          <p>It all started in 2021-2020-ish i was writing some python as i kid i was messing with python a lot.Then i wanted to show an image so i wrote something in there </p>   
+          <p>It all started in 2021-2020-ish i was writing some python as i kid i was messing with python a lot.Then i wanted to show an image so i wrote something in there did not work asked my brother he said you need a browser or a website learned HTML going to react then Next it was clear i gotta find a job now i work for myself earn money but making websites</p>   
           </div>
         
         </section>
