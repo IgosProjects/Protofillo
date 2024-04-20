@@ -1,41 +1,46 @@
-import { useClient } from 'next';
+ "use client"
+
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useRef } from 'react';
 
 const Logos = () => {
-  const client = useClient();
-  
-  if (!client) {
-    return null; // Return null if not on the client side
-  }
-
   const sceneRef = useRef(null);
 
-  // Code for Three.js scene setup
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  useEffect(() => {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    sceneRef.current.appendChild(renderer.domElement);
 
-  const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
 
-  const textureLoader = new THREE.TextureLoader();
-  const logoTexture = textureLoader.load('/node.png');
+    const textureLoader = new THREE.TextureLoader();
+    const logoTexture = textureLoader.load('/node.png');
 
-  const material = new THREE.MeshBasicMaterial({ map: logoTexture });
+    const materialFront = new THREE.MeshBasicMaterial({ map: logoTexture });
+    const materialBack = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Set the color for the back face
 
-  const ball = new THREE.Mesh(geometry, material);
-  scene.add(ball);
+    // Create an array of materials, with the front face material at index 0 and the back face material at index 1
+    const materials = [materialFront, materialBack];
 
-  camera.position.z = 5;
+    const ball = new THREE.Mesh(geometry, materials); // Use the materials array for the sphere
+    scene.add(ball);
 
-  const animate = () => {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-  };
+    camera.position.z = 5;
 
-  animate();
+    const animate = () => {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    return () => {
+      // Cleanup
+      renderer.dispose();
+    };
+  }, []);
 
   return <div ref={sceneRef} />;
 };
